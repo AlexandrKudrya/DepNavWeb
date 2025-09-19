@@ -27,12 +27,12 @@ kotlin {
 
 android {
     namespace = "ru.spbu.depnav"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ru.spbu.depnav"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = Version.CODE
         versionName = Version.NAME
 

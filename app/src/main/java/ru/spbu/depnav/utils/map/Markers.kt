@@ -32,19 +32,19 @@ import ru.spbu.depnav.data.model.Marker
 import ru.spbu.depnav.data.model.MarkerText
 import ru.spbu.depnav.ui.component.MarkerView
 
-private const val INVISIBLE_UNTIL_SCALE_PORTION = 0.2f
-private const val OPAQUE_SINCE_SCALE_PORTION = 0.5f
-private const val INVISIBLE_UNTIL_SCALED_BY = 0.1f
-private const val OPAQUE_SINCE_SCALED_BY = 0.5f
+private const val INVISIBLE_UNTIL_SCALE_PORTION = 0.2
+private const val OPAQUE_SINCE_SCALE_PORTION = 0.5
+private const val INVISIBLE_UNTIL_SCALED_BY = 0.1
+private const val OPAQUE_SINCE_SCALED_BY = 0.5
 
 /** Returns alpha value to use for map markers calculated based on the current map scale. */
-fun getMarkerAlpha(minScale: Float, scale: Float, maxScale: Float) = if (minScale < maxScale) {
+fun getMarkerAlpha(minScale: Double, scale: Double, maxScale: Double) = if (minScale < maxScale) {
     val invisibleUntil = minScale + ((maxScale - minScale) * INVISIBLE_UNTIL_SCALE_PORTION)
         .coerceAtMost(INVISIBLE_UNTIL_SCALED_BY)
     val opaqueFrom = minScale + ((maxScale - minScale) * OPAQUE_SINCE_SCALE_PORTION)
         .coerceAtMost(OPAQUE_SINCE_SCALED_BY)
     val coercedScale = scale.coerceIn(invisibleUntil, opaqueFrom)
-    (coercedScale - invisibleUntil) / (opaqueFrom - invisibleUntil)
+    ((coercedScale - invisibleUntil) / (opaqueFrom - invisibleUntil)).toFloat()
 } else {
     1f // minScale >= maxScale, so zooming is impossible, i.e. the scale cannot be changed
 }
@@ -63,7 +63,6 @@ fun MapState.addMarker(
         y = marker.y,
         clickable = markerText.run { !title.isNullOrBlank() || !description.isNullOrBlank() },
         relativeOffset = Offset(-0.5f, -0.5f),
-        clipShape = null,
         renderingStrategy = RenderingStrategy.Clustering(getClustererId(marker.type))
     ) {
         val alpha by alphaFlow.collectAsStateWithLifecycle()

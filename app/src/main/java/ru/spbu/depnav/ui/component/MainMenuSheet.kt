@@ -18,6 +18,7 @@
 
 package ru.spbu.depnav.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.spbu.depnav.R
 import ru.spbu.depnav.ui.viewmodel.AvailableMap
+import androidx.compose.ui.platform.LocalResources
 
 // https://m3.material.io/components/navigation-drawer/specs#368147de-9661-4a28-9fc1-ce2f8c9eac40
 private val ITEM_HEIGHT = 56.dp
@@ -136,7 +138,8 @@ private fun ColumnScope.MapItems(
 
 @Composable
 private fun MapLogo(internalMapName: String, contentDescription: String) {
-    val logoId = LocalContext.current.resources.getIdentifier(
+    @SuppressLint("DiscouragedApi")
+    val logoId = LocalResources.current.getIdentifier(
         "logo_${internalMapName.replace('-', '_')}", "drawable", LocalContext.current.packageName
     )
     Icon(
