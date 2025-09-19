@@ -202,7 +202,7 @@ class MapViewModel @Inject constructor(
         } while (state.value.language != language)
 
         val mapState = with(mapInfo) {
-            MapState(levelsNum, floorWidth, floorHeight, tileSize) { scale(0f) }
+            MapState(levelsNum, floorWidth, floorHeight, tileSize) { scale(0.0) }
         }.apply {
             setScrollOffsetRatio(0.5f, 0.5f)
             addClusterers(markerAlpha)
@@ -275,8 +275,7 @@ class MapViewModel @Inject constructor(
             x = marker.x,
             y = marker.y,
             zIndex = 1f,
-            clickable = false,
-            clipShape = null
+            clickable = false
         ) { Pin() }
     }
 

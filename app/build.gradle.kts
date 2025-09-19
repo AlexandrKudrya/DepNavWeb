@@ -12,7 +12,7 @@ plugins {
 object Version {
     private const val MAJOR = 1
     private const val MINOR = 4
-    private const val PATCH = 3
+    private const val PATCH = 4
 
     const val CODE = MAJOR * 10000 + MINOR * 100 + PATCH
     const val NAME = "$MAJOR.$MINOR.$PATCH"
@@ -27,12 +27,12 @@ kotlin {
 
 android {
     namespace = "ru.spbu.depnav"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ru.spbu.depnav"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = Version.CODE
         versionName = Version.NAME
 
