@@ -1,6 +1,17 @@
-name: Debug
+name: Android Debug
 
-on: [ push, workflow_dispatch ]
+on:
+  push:
+    paths-ignore:
+      - 'web/**'
+      - '.github/workflows/web-*.yml'
+      - '*.md'
+  pull_request:
+    paths-ignore:
+      - 'web/**'
+      - '.github/workflows/web-*.yml'
+      - '*.md'
+  workflow_dispatch:
 
 jobs:
   build:

@@ -1,8 +1,12 @@
-name: Release
+name: Android Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - 'web/**'
+      - '.github/workflows/web-*.yml'
+      - '*.md'
   workflow_dispatch:
 
 jobs:
