@@ -2,13 +2,26 @@
 
 Веб-версия карты факультета СПбГУ. Чистая статика, деплой на GitHub Pages.
 
+## Документация
+
+| Документ | Описание |
+|----------|----------|
+| [README.md](README.md) | Обзор проекта, команды, деплой |
+| [src/README.md](src/README.md) | Структура исходников |
+| [src/lib/README.md](src/lib/README.md) | Типы и архитектура |
+| [src/lib/components/README.md](src/lib/components/README.md) | Svelte компоненты |
+| [src/lib/stores/README.md](src/lib/stores/README.md) | Управление состоянием |
+| [src/lib/utils/README.md](src/lib/utils/README.md) | Утилиты |
+| [src/styles/README.md](src/styles/README.md) | CSS тема и переменные |
+| [public/README.md](public/README.md) | Статические файлы |
+
 ## Стек
 
 | Технология | Назначение |
 |------------|------------|
-| **Svelte** | UI фреймворк (компилируется в vanilla JS) |
-| **Vite** | Сборка и dev-сервер |
-| **Leaflet** | Интерактивные карты с тайлами |
+| **Svelte 5** | UI фреймворк |
+| **Vite 6** | Сборка и dev-сервер |
+| **Leaflet** | Интерактивные карты |
 | **TypeScript** | Типизация |
 
 ## Структура
@@ -17,48 +30,52 @@
 web/
 ├── src/
 │   ├── lib/
-│   │   ├── components/   # Svelte компоненты
-│   │   ├── stores/       # Svelte stores (состояние)
-│   │   └── utils/        # Утилиты
-│   ├── data/             # JSON с маркерами
-│   ├── styles/           # CSS
+│   │   ├── components/   # LeafletMap, FloorSwitch, SearchBar, MarkerPopup
+│   │   ├── stores/       # Svelte stores (floor, markers, search)
+│   │   ├── utils/        # markers.ts, search.ts
+│   │   └── types.ts      # TypeScript типы
+│   ├── styles/           # global.css (Material Design 3 тема)
 │   ├── App.svelte        # Корневой компонент
 │   └── main.ts           # Точка входа
-├── static/
-│   ├── tiles/            # Тайлы карт
-│   └── icons/            # Иконки маркеров
+├── public/
+│   ├── data/             # JSON данные карт
+│   ├── icons/            # SVG иконки маркеров
+│   └── tiles/            # Тайлы карт (webp)
 ├── index.html
 ├── package.json
-├── svelte.config.js
 ├── vite.config.ts
+├── svelte.config.js
 └── tsconfig.json
 ```
 
-## Команды
+## Быстрый старт
 
 ```bash
-npm install      # Установка зависимостей
-npm run dev      # Dev-сервер на localhost:5173
-npm run build    # Сборка в dist/
-npm run preview  # Превью сборки
+cd web
+npm install
+npm run dev
+# Открыть http://localhost:5173
 ```
 
-## Деплой
+## Фичи
 
-Автоматический через GitHub Actions → GitHub Pages.
-При пуше в `main` с изменениями в `web/` запускается сборка и деплой.
-
-## MVP фичи
-
+### MVP (реализовано)
 - [x] Интерактивная карта (зум, перетаскивание)
 - [x] Переключение этажей
 - [x] Поиск по комнатам
-- [x] Клик на маркер → информация
-- [x] Типы маркеров (комнаты, туалеты, лифты)
+- [x] Информация о маркере при клике
+- [x] Типы маркеров (комнаты, туалеты, лифты, лестницы)
+- [x] Светлая/тёмная тема (авто)
+- [x] Мобильный адаптивный UI
 
-## Nice-to-have
-
-- [ ] Тёмная тема
+### Планы
 - [ ] PWA / офлайн режим
 - [ ] Геолокация
-- [ ] Маршруты
+- [ ] Маршруты между точками
+
+## CI/CD
+
+- **CI:** `.github/workflows/web-ci.yml` — сборка и проверка при PR
+- **Deploy:** `.github/workflows/web-deploy.yml` — деплой на GitHub Pages
+
+URL: `https://alexandrkudrya.github.io/DepNavWeb/`
