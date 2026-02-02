@@ -1,0 +1,194 @@
+/* DepNav Web — Global Styles */
+/* Color scheme from Android app (Material Theme Builder, seed 0xFFB0BEC5) */
+
+:root {
+  /* Light theme */
+  --primary: #006781;
+  --on-primary: #ffffff;
+  --primary-container: #b9eaff;
+  --on-primary-container: #001f29;
+
+  --secondary: #4c626b;
+  --on-secondary: #ffffff;
+  --secondary-container: #cfe6f1;
+  --on-secondary-container: #071e26;
+
+  --tertiary: #5b5b7e;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #e1dfff;
+  --on-tertiary-container: #181837;
+
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --on-error: #ffffff;
+  --on-error-container: #410002;
+
+  --background: #fbfcfe;
+  --on-background: #191c1d;
+  --surface: #fbfcfe;
+  --on-surface: #191c1d;
+  --surface-variant: #dce4e8;
+  --on-surface-variant: #40484c;
+
+  --outline: #70787c;
+  --outline-variant: #c0c8cc;
+
+  /* UI constants */
+  --on-map-surface-alpha: 0.9;
+  --disabled-alpha: 0.38;
+  --default-padding: 16px;
+  --border-radius: 28px;
+  --border-radius-small: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+
+  /* Z-index layers */
+  --z-map: 0;
+  --z-markers: 100;
+  --z-ui: 400;
+  --z-search: 500;
+  --z-popup: 600;
+}
+
+/* Dark theme (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #5fd4fd;
+    --on-primary: #003544;
+    --primary-container: #004d62;
+    --on-primary-container: #b9eaff;
+
+    --secondary: #b3cad5;
+    --on-secondary: #1e333c;
+    --secondary-container: #354a53;
+    --on-secondary-container: #cfe6f1;
+
+    --tertiary: #c4c3eb;
+    --on-tertiary: #2d2d4d;
+    --tertiary-container: #434465;
+    --on-tertiary-container: #e1dfff;
+
+    --error: #ffb4ab;
+    --error-container: #93000a;
+    --on-error: #690005;
+    --on-error-container: #ffdad6;
+
+    --background: #191c1d;
+    --on-background: #e1e3e4;
+    --surface: #191c1d;
+    --on-surface: #e1e3e4;
+    --surface-variant: #40484c;
+    --on-surface-variant: #c0c8cc;
+
+    --outline: #8a9296;
+    --outline-variant: #40484c;
+  }
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--on-background);
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide Leaflet attribution on mobile for cleaner UI */
+@media (max-width: 480px) {
+  .leaflet-control-attribution {
+    display: none;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--outline-variant);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--outline);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Button reset */
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: var(--disabled-alpha);
+}
+
+/* Input reset */
+input {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+input::placeholder {
+  color: var(--on-surface-variant);
+}
+
+/* Safe area for mobile */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

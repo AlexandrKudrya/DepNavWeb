@@ -5,6 +5,7 @@ on:
     paths:
       - 'web/**'
       - '.github/workflows/web-*.yml'
+    branches: [main]
   pull_request:
     paths:
       - 'web/**'
@@ -31,16 +32,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check formatting
-        run: npm run format:check
-        continue-on-error: true
-
-      - name: Lint
-        run: npm run lint
-        continue-on-error: true
-
       - name: Type check
         run: npm run check
 
       - name: Build
         run: npm run build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 7
