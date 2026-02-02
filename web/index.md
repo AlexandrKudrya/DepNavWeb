@@ -1,33 +1,64 @@
-# Web Application — DepNav Web
+# DepNav Web
 
-Веб-версия приложения для навигации по зданиям СПбГУ.
+Веб-версия карты факультета СПбГУ. Чистая статика, деплой на GitHub Pages.
+
+## Стек
+
+| Технология | Назначение |
+|------------|------------|
+| **Svelte** | UI фреймворк (компилируется в vanilla JS) |
+| **Vite** | Сборка и dev-сервер |
+| **Leaflet** | Интерактивные карты с тайлами |
+| **TypeScript** | Типизация |
 
 ## Структура
 
-| Папка | Назначение |
-|-------|------------|
-| `frontend/` | Веб-интерфейс (SPA) — React/Vue/Svelte + карты |
-| `backend/` | REST API сервер для работы с данными |
-| `shared/` | Общие типы и константы между frontend и backend |
-| `docs/` | Документация проекта |
-
-## Связь с Android-версией
-
-Веб-версия использует те же данные что и Android:
-- JSON конфиги из `../data/jsons/`
-- SQLite база `../app/src/main/assets/maps.db`
-- Тайлы карт из `../app/src/main/assets/tiles/`
-
-## Запуск
-
-```bash
-# Frontend
-cd frontend && npm install && npm run dev
-
-# Backend
-cd backend && npm install && npm run dev
+```
+web/
+├── src/
+│   ├── lib/
+│   │   ├── components/   # Svelte компоненты
+│   │   ├── stores/       # Svelte stores (состояние)
+│   │   └── utils/        # Утилиты
+│   ├── data/             # JSON с маркерами
+│   ├── styles/           # CSS
+│   ├── App.svelte        # Корневой компонент
+│   └── main.ts           # Точка входа
+├── static/
+│   ├── tiles/            # Тайлы карт
+│   └── icons/            # Иконки маркеров
+├── index.html
+├── package.json
+├── svelte.config.js
+├── vite.config.ts
+└── tsconfig.json
 ```
 
-## CI/CD
+## Команды
 
-Пайплайны настроены отдельно от Android — см. `../.github/workflows/`
+```bash
+npm install      # Установка зависимостей
+npm run dev      # Dev-сервер на localhost:5173
+npm run build    # Сборка в dist/
+npm run preview  # Превью сборки
+```
+
+## Деплой
+
+Автоматический через GitHub Actions → GitHub Pages.
+При пуше в `main` с изменениями в `web/` запускается сборка и деплой.
+
+## MVP фичи
+
+- [x] Интерактивная карта (зум, перетаскивание)
+- [x] Переключение этажей
+- [x] Поиск по комнатам
+- [x] Клик на маркер → информация
+- [x] Типы маркеров (комнаты, туалеты, лифты)
+
+## Nice-to-have
+
+- [ ] Тёмная тема
+- [ ] PWA / офлайн режим
+- [ ] Геолокация
+- [ ] Маршруты

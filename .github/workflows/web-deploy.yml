@@ -1,17 +1,26 @@
-name: Web Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
     paths:
       - 'web/**'
+      - '.github/workflows/web-deploy.yml'
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
 jobs:
-  deploy:
-    name: Deploy to Production
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    environment: production
     defaults:
       run:
         working-directory: web
@@ -30,42 +39,23 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
 
-      # Пример деплоя на различные платформы:
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
 
-      # --- Vercel (Frontend) ---
-      # - name: Deploy to Vercel
-      #   uses: amondnet/vercel-action@v25
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     working-directory: web/frontend
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-      # --- Netlify (Frontend) ---
-      # - name: Deploy to Netlify
-      #   uses: nwtgck/actions-netlify@v2
-      #   with:
-      #     publish-dir: web/frontend/dist
-      #     production-deploy: true
-      #   env:
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-      # --- Docker (Backend) ---
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: web/backend
-      #     push: true
-      #     tags: ghcr.io/${{ github.repository }}/backend:latest
-
-      # --- Railway / Render / Fly.io (Backend) ---
-      # - name: Deploy to Railway
-      #   uses: bervProject/railway-deploy@main
-      #   with:
-      #     railway_token: ${{ secrets.RAILWAY_TOKEN }}
-      #     service: backend
-
-      - name: Deployment placeholder
-        run: echo "Configure deployment in this workflow"
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
