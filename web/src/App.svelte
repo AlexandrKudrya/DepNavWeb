@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { LeafletMap, FloorSwitch, SearchBar, MarkerPopup } from './lib';
-  import { mapData, showUI, searchExpanded } from './lib/stores';
+  import { mapData, showUI } from './lib/stores';
   import type { MapInfo } from './lib/types';
 
   let loading = true;
@@ -35,11 +35,6 @@
     }
   });
 
-  // Hide UI when interacting with map
-  function handleMapInteraction() {
-    if ($searchExpanded) return;
-    // Could implement UI auto-hide here
-  }
 </script>
 
 <main class="app">
@@ -55,7 +50,7 @@
       <button onclick={() => location.reload()}>Попробовать снова</button>
     </div>
   {:else}
-    <div class="map-wrapper" onclick={handleMapInteraction}>
+    <div class="map-wrapper">
       <LeafletMap />
     </div>
 

@@ -94,15 +94,15 @@
     // Format: tiles/spbu-mm/floor1/{z}/{x}/{y}.webp
     const tileUrl = `${tilesPath}/floor${$currentFloor}/{z}/{x}/{y}.webp`;
 
+    const southWest = map.unproject([0, $mapData.floorHeight], $mapData.zoomLevelsNum - 1);
+    const northEast = map.unproject([$mapData.floorWidth, 0], $mapData.zoomLevelsNum - 1);
+
     L.tileLayer(tileUrl, {
       minZoom: 0,
       maxZoom: $mapData.zoomLevelsNum - 1,
       tileSize: $mapData.tileSize,
       noWrap: true,
-      bounds: [
-        map.unproject([0, $mapData.floorHeight], $mapData.zoomLevelsNum - 1),
-        map.unproject([$mapData.floorWidth, 0], $mapData.zoomLevelsNum - 1),
-      ],
+      bounds: L.latLngBounds(southWest, northEast),
     }).addTo(map);
   }
 
