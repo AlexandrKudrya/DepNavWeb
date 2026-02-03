@@ -1,0 +1,82 @@
+name: PR Preview Deploy
+
+on:
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/web-preview.yml'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    name: Build & Deploy Preview
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          BASE_PATH: ''
+
+      - name: Deploy to surge.sh
+        id: deploy
+        run: |
+          npm install -g surge
+          DEPLOY_URL="depnav-pr-${{ github.event.pull_request.number }}.surge.sh"
+          surge ./dist $DEPLOY_URL --token ${{ secrets.SURGE_TOKEN }}
+          echo "url=https://$DEPLOY_URL" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            const body = `## 🚀 Preview Deployment
+
+            | Name | Link |
+            |------|------|
+            | **Preview URL** | ${url} |
+            | **Commit** | ${{ github.event.pull_request.head.sha }} |
+
+            Preview will be updated on each push to this PR.`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Preview Deployment')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
