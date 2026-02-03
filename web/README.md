@@ -55,11 +55,33 @@ npm run check    # Проверка типов
 
 ## Деплой
 
-Автоматический деплой на GitHub Pages при пуше в `main`:
-- CI: `.github/workflows/web-ci.yml`
-- Deploy: `.github/workflows/web-deploy.yml`
+### Production (GitHub Pages)
 
-URL: `https://alexandrkudrya.github.io/DepNavWeb/`
+Автоматический деплой при пуше в `main`:
+- Workflow: `.github/workflows/web-deploy.yml`
+- URL: `https://alexandrkudrya.github.io/DepNavWeb/`
+
+**Требуется:** Включить Pages в Settings → Pages → Source: GitHub Actions
+
+### PR Preview (surge.sh)
+
+Автоматический preview для каждого PR:
+- Workflow: `.github/workflows/web-preview.yml`
+- URL: `https://depnav-pr-{номер}.surge.sh`
+
+**Настройка SURGE_TOKEN:**
+```bash
+# Установить surge CLI
+npm install -g surge
+
+# Получить токен
+surge token
+
+# Добавить в GitHub Secrets:
+# Settings → Secrets → Actions → New repository secret
+# Name: SURGE_TOKEN
+# Value: <токен из команды выше>
+```
 
 ## Связь с Android
 
