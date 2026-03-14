@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { LeafletMap, FloorSwitch, SearchBar, MarkerPopup } from './lib';
-  import { mapData, showUI } from './lib/stores';
+  import { mapData, currentFloor, showUI } from './lib/stores';
+  import { parseUrlLocation } from './lib/utils/urlParams';
   import type { MapInfo } from './lib/types';
 
   let loading = true;
@@ -27,6 +28,16 @@
       }
 
       mapData.set(data);
+
+      // Restore floor from URL hash if present
+      const urlLoc = parseUrlLocation();
+      if (urlLoc.floor !== undefined) {
+        const maxFloor = Math.max(...data.floors.map(f => f.floor));
+        if (urlLoc.floor >= 1 && urlLoc.floor <= maxFloor) {
+          currentFloor.set(urlLoc.floor);
+        }
+      }
+
       loading = false;
     } catch (e) {
       console.error('Failed to load map:', e);

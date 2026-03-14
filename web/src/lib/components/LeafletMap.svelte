@@ -3,6 +3,7 @@
   import L from 'leaflet';
   import { mapData, currentFloor, currentFloorMarkers, selectedMarker, language } from '../stores';
   import { getMarkerTypeInfo } from '../utils';
+  import { parseUrlLocation, updateUrlLocation } from '../utils/urlParams';
   import type { Marker } from '../types';
 
   let mapContainer: HTMLDivElement;
@@ -43,6 +44,13 @@
 
     // Set initial view
     map.setView([0, 0], 1);
+
+    // Update URL hash whenever the map view changes
+    map.on('moveend zoomend', () => {
+      if (!map) return;
+      const center = map.getCenter();
+      updateUrlLocation({ zoom: map.getZoom(), lat: center.lat, lng: center.lng });
+    });
   }
 
   // Update map when data changes
@@ -53,6 +61,7 @@
   // Update tile layer when floor changes
   $: if (map && $mapData && $currentFloor) {
     updateTileLayer();
+    updateUrlLocation({ floor: $currentFloor });
   }
 
   // Update markers when floor markers change
@@ -64,6 +73,8 @@
   $: if (map && $selectedMarker) {
     panToMarker($selectedMarker);
   }
+
+  let boundsInitialized = false;
 
   function updateMapBounds() {
     if (!map || !$mapData) return;
@@ -77,7 +88,17 @@
     const bounds = new L.LatLngBounds(southWest, northEast);
 
     map.setMaxBounds(bounds);
-    map.fitBounds(bounds);
+
+    if (!boundsInitialized) {
+      boundsInitialized = true;
+      // Try to restore position from URL hash on first load
+      const urlLoc = parseUrlLocation();
+      if (urlLoc.lat !== undefined && urlLoc.lng !== undefined && urlLoc.zoom !== undefined) {
+        map.setView([urlLoc.lat, urlLoc.lng], urlLoc.zoom);
+      } else {
+        map.fitBounds(bounds);
+      }
+    }
   }
 
   function updateTileLayer() {
